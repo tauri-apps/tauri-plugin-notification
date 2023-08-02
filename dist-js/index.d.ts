@@ -243,7 +243,7 @@ type Permission = "granted" | "denied" | "default";
  * Checks if the permission to send notifications is granted.
  * @example
  * ```typescript
- * import { isPermissionGranted } from '@tauri-apps/api/notification';
+ * import { isPermissionGranted } from '@tauri-apps/plugin-notification';
  * const permissionGranted = await isPermissionGranted();
  * ```
  *
@@ -254,7 +254,7 @@ declare function isPermissionGranted(): Promise<boolean>;
  * Requests the permission to send notifications.
  * @example
  * ```typescript
- * import { isPermissionGranted, requestPermission } from '@tauri-apps/api/notification';
+ * import { isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification';
  * let permissionGranted = await isPermissionGranted();
  * if (!permissionGranted) {
  *   const permission = await requestPermission();
@@ -271,7 +271,7 @@ declare function requestPermission(): Promise<Permission>;
  * Sends a notification to the user.
  * @example
  * ```typescript
- * import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+ * import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/plugin-notification';
  * let permissionGranted = await isPermissionGranted();
  * if (!permissionGranted) {
  *   const permission = await requestPermission();
@@ -291,7 +291,7 @@ declare function sendNotification(options: Options | string): void;
  *
  * @example
  * ```typescript
- * import { registerActionTypes } from '@tauri-apps/api/notification';
+ * import { registerActionTypes } from '@tauri-apps/plugin-notification';
  * await registerActionTypes([{
  *   id: 'tauri',
  *   actions: [{
@@ -311,7 +311,7 @@ declare function registerActionTypes(types: ActionType[]): Promise<void>;
  *
  * @example
  * ```typescript
- * import { pending } from '@tauri-apps/api/notification';
+ * import { pending } from '@tauri-apps/plugin-notification';
  * const pendingNotifications = await pending();
  * ```
  *
@@ -325,7 +325,7 @@ declare function pending(): Promise<PendingNotification[]>;
  *
  * @example
  * ```typescript
- * import { cancel } from '@tauri-apps/api/notification';
+ * import { cancel } from '@tauri-apps/plugin-notification';
  * await cancel([-34234, 23432, 4311]);
  * ```
  *
@@ -339,7 +339,7 @@ declare function cancel(notifications: number[]): Promise<void>;
  *
  * @example
  * ```typescript
- * import { cancelAll } from '@tauri-apps/api/notification';
+ * import { cancelAll } from '@tauri-apps/plugin-notification';
  * await cancelAll();
  * ```
  *
@@ -353,7 +353,7 @@ declare function cancelAll(): Promise<void>;
  *
  * @example
  * ```typescript
- * import { active } from '@tauri-apps/api/notification';
+ * import { active } from '@tauri-apps/plugin-notification';
  * const activeNotifications = await active();
  * ```
  *
@@ -367,7 +367,7 @@ declare function active(): Promise<ActiveNotification[]>;
  *
  * @example
  * ```typescript
- * import { cancel } from '@tauri-apps/api/notification';
+ * import { cancel } from '@tauri-apps/plugin-notification';
  * await cancel([-34234, 23432, 4311])
  * ```
  *
@@ -381,7 +381,7 @@ declare function removeActive(notifications: number[]): Promise<void>;
  *
  * @example
  * ```typescript
- * import { removeAllActive } from '@tauri-apps/api/notification';
+ * import { removeAllActive } from '@tauri-apps/plugin-notification';
  * await removeAllActive()
  * ```
  *
@@ -395,7 +395,7 @@ declare function removeAllActive(): Promise<void>;
  *
  * @example
  * ```typescript
- * import { createChannel, Importance, Visibility } from '@tauri-apps/api/notification';
+ * import { createChannel, Importance, Visibility } from '@tauri-apps/plugin-notification';
  * await createChannel({
  *   id: 'new-messages',
  *   name: 'New Messages',
@@ -416,7 +416,7 @@ declare function createChannel(channel: Channel): Promise<void>;
  *
  * @example
  * ```typescript
- * import { removeChannel } from '@tauri-apps/api/notification';
+ * import { removeChannel } from '@tauri-apps/plugin-notification';
  * await removeChannel();
  * ```
  *
@@ -430,7 +430,7 @@ declare function removeChannel(id: string): Promise<void>;
  *
  * @example
  * ```typescript
- * import { channels } from '@tauri-apps/api/notification';
+ * import { channels } from '@tauri-apps/plugin-notification';
  * const notificationChannels = await channels();
  * ```
  *
