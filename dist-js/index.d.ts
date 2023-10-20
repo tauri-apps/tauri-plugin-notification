@@ -4,7 +4,7 @@
  *
  * @module
  */
-import { PluginListener } from "@tauri-apps/api/tauri";
+import { PluginListener } from "@tauri-apps/api/primitives";
 /**
  * Options to send a notification.
  *
