@@ -11,17 +11,17 @@ import { invoke, addPluginListener } from '@tauri-apps/api/primitives';
  */
 var ScheduleEvery;
 (function (ScheduleEvery) {
-    ScheduleEvery["Year"] = "Year";
-    ScheduleEvery["Month"] = "Month";
-    ScheduleEvery["TwoWeeks"] = "TwoWeeks";
-    ScheduleEvery["Week"] = "Week";
-    ScheduleEvery["Day"] = "Day";
-    ScheduleEvery["Hour"] = "Hour";
-    ScheduleEvery["Minute"] = "Minute";
+    ScheduleEvery["Year"] = "year";
+    ScheduleEvery["Month"] = "month";
+    ScheduleEvery["TwoWeeks"] = "twoWeeks";
+    ScheduleEvery["Week"] = "week";
+    ScheduleEvery["Day"] = "day";
+    ScheduleEvery["Hour"] = "hour";
+    ScheduleEvery["Minute"] = "minute";
     /**
      * Not supported on iOS.
      */
-    ScheduleEvery["Second"] = "Second";
+    ScheduleEvery["Second"] = "second";
 })(ScheduleEvery || (ScheduleEvery = {}));
 var Importance;
 (function (Importance) {
@@ -219,7 +219,7 @@ async function removeAllActive() {
     return invoke("plugin:notification|remove_active");
 }
 /**
- * Removes all active notifications.
+ * Creates a notification channel.
  *
  * @example
  * ```typescript
@@ -271,7 +271,7 @@ async function removeChannel(id) {
  * @since 2.0.0
  */
 async function channels() {
-    return invoke("plugin:notification|getActive");
+    return invoke("plugin:notification|listChannels");
 }
 async function onNotificationReceived(cb) {
     return addPluginListener("notification", "notification", cb);

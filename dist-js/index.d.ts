@@ -140,25 +140,43 @@ type ScheduleInterval = {
     second?: number;
 };
 declare enum ScheduleEvery {
-    Year = "Year",
-    Month = "Month",
-    TwoWeeks = "TwoWeeks",
-    Week = "Week",
-    Day = "Day",
-    Hour = "Hour",
-    Minute = "Minute",
+    Year = "year",
+    Month = "month",
+    TwoWeeks = "twoWeeks",
+    Week = "week",
+    Day = "day",
+    Hour = "hour",
+    Minute = "minute",
     /**
      * Not supported on iOS.
      */
-    Second = "Second"
+    Second = "second"
 }
+type ScheduleData = {
+    at: {
+        date: Date;
+        repeating: boolean;
+        allowWhileIdle: boolean;
+    };
+} | {
+    interval: {
+        interval: ScheduleInterval;
+        allowWhileIdle: boolean;
+    };
+} | {
+    every: {
+        interval: ScheduleEvery;
+        count: number;
+        allowWhileIdle: boolean;
+    };
+};
 declare class Schedule {
-    kind: string;
-    data: unknown;
+    schedule: ScheduleData;
     private constructor();
-    static at(date: Date, repeating?: boolean): Schedule;
-    static interval(interval: ScheduleInterval): Schedule;
-    static every(kind: ScheduleEvery): Schedule;
+    toJSON(): string;
+    static at(date: Date, repeating?: boolean, allowWhileIdle?: boolean): Schedule;
+    static interval(interval: ScheduleInterval, allowWhileIdle?: boolean): Schedule;
+    static every(kind: ScheduleEvery, count: number, allowWhileIdle?: boolean): Schedule;
 }
 /**
  * Attachment of a notification.
@@ -375,7 +393,10 @@ declare function active(): Promise<ActiveNotification[]>;
  *
  * @since 2.0.0
  */
-declare function removeActive(notifications: number[]): Promise<void>;
+declare function removeActive(notifications: {
+    id: number;
+    tag?: string;
+}[]): Promise<void>;
 /**
  * Removes all active notifications.
  *
@@ -391,7 +412,7 @@ declare function removeActive(notifications: number[]): Promise<void>;
  */
 declare function removeAllActive(): Promise<void>;
 /**
- * Removes all active notifications.
+ * Creates a notification channel.
  *
  * @example
  * ```typescript
