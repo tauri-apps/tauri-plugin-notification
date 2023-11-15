@@ -1,4 +1,6 @@
-import { invoke, addPluginListener } from '@tauri-apps/api/primitives';
+'use strict';
+
+var primitives = require('@tauri-apps/api/primitives');
 
 // Copyright 2019-2023 Tauri Programme within The Commons Conservancy
 // SPDX-License-Identifier: Apache-2.0
@@ -23,20 +25,20 @@ var ScheduleEvery;
      */
     ScheduleEvery["Second"] = "second";
 })(ScheduleEvery || (ScheduleEvery = {}));
-var Importance;
+exports.Importance = void 0;
 (function (Importance) {
     Importance[Importance["None"] = 0] = "None";
     Importance[Importance["Min"] = 1] = "Min";
     Importance[Importance["Low"] = 2] = "Low";
     Importance[Importance["Default"] = 3] = "Default";
     Importance[Importance["High"] = 4] = "High";
-})(Importance || (Importance = {}));
-var Visibility;
+})(exports.Importance || (exports.Importance = {}));
+exports.Visibility = void 0;
 (function (Visibility) {
     Visibility[Visibility["Secret"] = -1] = "Secret";
     Visibility[Visibility["Private"] = 0] = "Private";
     Visibility[Visibility["Public"] = 1] = "Public";
-})(Visibility || (Visibility = {}));
+})(exports.Visibility || (exports.Visibility = {}));
 /**
  * Checks if the permission to send notifications is granted.
  * @example
@@ -51,7 +53,7 @@ async function isPermissionGranted() {
     if (window.Notification.permission !== "default") {
         return Promise.resolve(window.Notification.permission === "granted");
     }
-    return invoke("plugin:notification|is_permission_granted");
+    return primitives.invoke("plugin:notification|is_permission_granted");
 }
 /**
  * Requests the permission to send notifications.
@@ -120,7 +122,7 @@ function sendNotification(options) {
  * @since 2.0.0
  */
 async function registerActionTypes(types) {
-    return invoke("plugin:notification|register_action_types", { types });
+    return primitives.invoke("plugin:notification|register_action_types", { types });
 }
 /**
  * Retrieves the list of pending notifications.
@@ -136,7 +138,7 @@ async function registerActionTypes(types) {
  * @since 2.0.0
  */
 async function pending() {
-    return invoke("plugin:notification|get_pending");
+    return primitives.invoke("plugin:notification|get_pending");
 }
 /**
  * Cancels the pending notifications with the given list of identifiers.
@@ -152,7 +154,7 @@ async function pending() {
  * @since 2.0.0
  */
 async function cancel(notifications) {
-    return invoke("plugin:notification|cancel", { notifications });
+    return primitives.invoke("plugin:notification|cancel", { notifications });
 }
 /**
  * Cancels all pending notifications.
@@ -168,7 +170,7 @@ async function cancel(notifications) {
  * @since 2.0.0
  */
 async function cancelAll() {
-    return invoke("plugin:notification|cancel");
+    return primitives.invoke("plugin:notification|cancel");
 }
 /**
  * Retrieves the list of active notifications.
@@ -184,7 +186,7 @@ async function cancelAll() {
  * @since 2.0.0
  */
 async function active() {
-    return invoke("plugin:notification|get_active");
+    return primitives.invoke("plugin:notification|get_active");
 }
 /**
  * Removes the active notifications with the given list of identifiers.
@@ -200,7 +202,7 @@ async function active() {
  * @since 2.0.0
  */
 async function removeActive(notifications) {
-    return invoke("plugin:notification|remove_active", { notifications });
+    return primitives.invoke("plugin:notification|remove_active", { notifications });
 }
 /**
  * Removes all active notifications.
@@ -216,7 +218,7 @@ async function removeActive(notifications) {
  * @since 2.0.0
  */
 async function removeAllActive() {
-    return invoke("plugin:notification|remove_active");
+    return primitives.invoke("plugin:notification|remove_active");
 }
 /**
  * Creates a notification channel.
@@ -239,7 +241,7 @@ async function removeAllActive() {
  * @since 2.0.0
  */
 async function createChannel(channel) {
-    return invoke("plugin:notification|create_channel", { ...channel });
+    return primitives.invoke("plugin:notification|create_channel", { ...channel });
 }
 /**
  * Removes the channel with the given identifier.
@@ -255,7 +257,7 @@ async function createChannel(channel) {
  * @since 2.0.0
  */
 async function removeChannel(id) {
-    return invoke("plugin:notification|delete_channel", { id });
+    return primitives.invoke("plugin:notification|delete_channel", { id });
 }
 /**
  * Retrieves the list of notification channels.
@@ -271,14 +273,27 @@ async function removeChannel(id) {
  * @since 2.0.0
  */
 async function channels() {
-    return invoke("plugin:notification|listChannels");
+    return primitives.invoke("plugin:notification|listChannels");
 }
 async function onNotificationReceived(cb) {
-    return addPluginListener("notification", "notification", cb);
+    return primitives.addPluginListener("notification", "notification", cb);
 }
 async function onAction(cb) {
-    return addPluginListener("notification", "actionPerformed", cb);
+    return primitives.addPluginListener("notification", "actionPerformed", cb);
 }
 
-export { Importance, Visibility, active, cancel, cancelAll, channels, createChannel, isPermissionGranted, onAction, onNotificationReceived, pending, registerActionTypes, removeActive, removeAllActive, removeChannel, requestPermission, sendNotification };
-//# sourceMappingURL=index.mjs.map
+exports.active = active;
+exports.cancel = cancel;
+exports.cancelAll = cancelAll;
+exports.channels = channels;
+exports.createChannel = createChannel;
+exports.isPermissionGranted = isPermissionGranted;
+exports.onAction = onAction;
+exports.onNotificationReceived = onNotificationReceived;
+exports.pending = pending;
+exports.registerActionTypes = registerActionTypes;
+exports.removeActive = removeActive;
+exports.removeAllActive = removeAllActive;
+exports.removeChannel = removeChannel;
+exports.requestPermission = requestPermission;
+exports.sendNotification = sendNotification;
