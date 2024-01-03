@@ -23,6 +23,23 @@ var ScheduleEvery;
      */
     ScheduleEvery["Second"] = "second";
 })(ScheduleEvery || (ScheduleEvery = {}));
+class Schedule {
+    constructor(schedule) {
+        this.schedule = schedule;
+    }
+    toJSON() {
+        return JSON.stringify(this.schedule);
+    }
+    static at(date, repeating = false, allowWhileIdle = false) {
+        return new Schedule({ at: { date, repeating, allowWhileIdle } });
+    }
+    static interval(interval, allowWhileIdle = false) {
+        return new Schedule({ interval: { interval, allowWhileIdle } });
+    }
+    static every(kind, count, allowWhileIdle = false) {
+        return new Schedule({ every: { interval: kind, count, allowWhileIdle } });
+    }
+}
 var Importance;
 (function (Importance) {
     Importance[Importance["None"] = 0] = "None";
@@ -280,4 +297,4 @@ async function onAction(cb) {
     return addPluginListener("notification", "actionPerformed", cb);
 }
 
-export { Importance, Visibility, active, cancel, cancelAll, channels, createChannel, isPermissionGranted, onAction, onNotificationReceived, pending, registerActionTypes, removeActive, removeAllActive, removeChannel, requestPermission, sendNotification };
+export { Importance, Schedule, ScheduleEvery, Visibility, active, cancel, cancelAll, channels, createChannel, isPermissionGranted, onAction, onNotificationReceived, pending, registerActionTypes, removeActive, removeAllActive, removeChannel, requestPermission, sendNotification };

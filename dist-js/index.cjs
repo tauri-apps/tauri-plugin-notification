@@ -11,7 +11,7 @@ var core = require('@tauri-apps/api/core');
  *
  * @module
  */
-var ScheduleEvery;
+exports.ScheduleEvery = void 0;
 (function (ScheduleEvery) {
     ScheduleEvery["Year"] = "year";
     ScheduleEvery["Month"] = "month";
@@ -24,7 +24,24 @@ var ScheduleEvery;
      * Not supported on iOS.
      */
     ScheduleEvery["Second"] = "second";
-})(ScheduleEvery || (ScheduleEvery = {}));
+})(exports.ScheduleEvery || (exports.ScheduleEvery = {}));
+class Schedule {
+    constructor(schedule) {
+        this.schedule = schedule;
+    }
+    toJSON() {
+        return JSON.stringify(this.schedule);
+    }
+    static at(date, repeating = false, allowWhileIdle = false) {
+        return new Schedule({ at: { date, repeating, allowWhileIdle } });
+    }
+    static interval(interval, allowWhileIdle = false) {
+        return new Schedule({ interval: { interval, allowWhileIdle } });
+    }
+    static every(kind, count, allowWhileIdle = false) {
+        return new Schedule({ every: { interval: kind, count, allowWhileIdle } });
+    }
+}
 exports.Importance = void 0;
 (function (Importance) {
     Importance[Importance["None"] = 0] = "None";
@@ -282,6 +299,7 @@ async function onAction(cb) {
     return core.addPluginListener("notification", "actionPerformed", cb);
 }
 
+exports.Schedule = Schedule;
 exports.active = active;
 exports.cancel = cancel;
 exports.cancelAll = cancelAll;
