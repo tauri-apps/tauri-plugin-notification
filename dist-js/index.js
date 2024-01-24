@@ -24,20 +24,26 @@ var ScheduleEvery;
     ScheduleEvery["Second"] = "second";
 })(ScheduleEvery || (ScheduleEvery = {}));
 class Schedule {
-    constructor(schedule) {
-        this.schedule = schedule;
-    }
-    toJSON() {
-        return JSON.stringify(this.schedule);
-    }
     static at(date, repeating = false, allowWhileIdle = false) {
-        return new Schedule({ at: { date, repeating, allowWhileIdle } });
+        return {
+            at: { date, repeating, allowWhileIdle },
+            interval: undefined,
+            every: undefined,
+        };
     }
     static interval(interval, allowWhileIdle = false) {
-        return new Schedule({ interval: { interval, allowWhileIdle } });
+        return {
+            at: undefined,
+            interval: { interval, allowWhileIdle },
+            every: undefined,
+        };
     }
     static every(kind, count, allowWhileIdle = false) {
-        return new Schedule({ every: { interval: kind, count, allowWhileIdle } });
+        return {
+            at: undefined,
+            interval: undefined,
+            every: { interval: kind, count, allowWhileIdle },
+        };
     }
 }
 var Importance;

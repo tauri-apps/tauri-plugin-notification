@@ -152,28 +152,21 @@ declare enum ScheduleEvery {
      */
     Second = "second"
 }
-type ScheduleData = {
+declare class Schedule {
     at: {
         date: Date;
         repeating: boolean;
         allowWhileIdle: boolean;
-    };
-} | {
+    } | undefined;
     interval: {
         interval: ScheduleInterval;
         allowWhileIdle: boolean;
-    };
-} | {
+    } | undefined;
     every: {
         interval: ScheduleEvery;
         count: number;
         allowWhileIdle: boolean;
-    };
-};
-declare class Schedule {
-    schedule: ScheduleData;
-    private constructor();
-    toJSON(): string;
+    } | undefined;
     static at(date: Date, repeating?: boolean, allowWhileIdle?: boolean): Schedule;
     static interval(interval: ScheduleInterval, allowWhileIdle?: boolean): Schedule;
     static every(kind: ScheduleEvery, count: number, allowWhileIdle?: boolean): Schedule;
