@@ -206,11 +206,10 @@ mod imp {
             }
             #[cfg(target_os = "macos")]
             {
-                let _ = notify_rust::set_application(if tauri::is_dev() {
-                    "com.apple.Terminal"
-                } else {
-                    &self.identifier
-                });
+                // Always bind notifications to the app bundle identifier so
+                // macOS applies this app's notification style settings
+                // (banner/alert/sound) consistently in dev and release.
+                let _ = notify_rust::set_application(&self.identifier);
             }
 
             tauri::async_runtime::spawn(async move {
