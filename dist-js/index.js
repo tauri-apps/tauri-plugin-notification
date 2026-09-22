@@ -9,21 +9,76 @@ import { invoke, addPluginListener } from '@tauri-apps/api/core';
  *
  * @module
  */
+/**
+ * The unit of the repeating interval used by {@link Schedule.every}.
+ */
 var ScheduleEvery;
 (function (ScheduleEvery) {
+    /**
+     * The notification repeats every year.
+     *
+     * On Android a year is approximated as 52 weeks.
+     */
     ScheduleEvery["Year"] = "year";
+    /**
+     * The notification repeats every month.
+     *
+     * On Android a month is approximated as 30 days.
+     */
     ScheduleEvery["Month"] = "month";
+    /**
+     * The notification repeats every two weeks.
+     */
     ScheduleEvery["TwoWeeks"] = "twoWeeks";
+    /**
+     * The notification repeats every week.
+     */
     ScheduleEvery["Week"] = "week";
+    /**
+     * The notification repeats every day.
+     */
     ScheduleEvery["Day"] = "day";
+    /**
+     * The notification repeats every hour.
+     */
     ScheduleEvery["Hour"] = "hour";
+    /**
+     * The notification repeats every minute.
+     */
     ScheduleEvery["Minute"] = "minute";
     /**
-     * Not supported on iOS.
+     * The notification repeats every second.
+     *
+     * Not supported on iOS, where repeating triggers must be at least a minute apart.
      */
     ScheduleEvery["Second"] = "second";
 })(ScheduleEvery || (ScheduleEvery = {}));
+/**
+ * Defines when a scheduled notification is delivered.
+ *
+ * Build one with the static {@link Schedule.at}, {@link Schedule.interval} and
+ * {@link Schedule.every} helpers, then pass it to the `schedule` option of a notification.
+ * Scheduling is only supported on mobile; desktop notifications are always shown immediately.
+ *
+ * @since 2.0.0
+ */
 class Schedule {
+    /**
+     * Creates a schedule that fires the notification at the given date and time.
+     *
+     * @example
+     * ```typescript
+     * import { Schedule, sendNotification } from '@tauri-apps/plugin-notification';
+     * const schedule = Schedule.at(new Date(Date.now() + 60 * 1000));
+     * sendNotification({ title: 'Tauri', body: 'One minute later', schedule });
+     * ```
+     *
+     * @param date The date and time the notification fires at. It must be in the future.
+     * @param repeating Whether the notification keeps repeating, using the duration between the moment it is scheduled and `date` as the interval. The interval must be at least one minute on iOS.
+     * @param allowWhileIdle Whether the notification is allowed to fire while the device is in low-power idle (Doze) mode. Android only.
+     *
+     * @returns A schedule that can be assigned to the `schedule` option of a notification.
+     */
     static at(date, repeating = false, allowWhileIdle = false) {
         return {
             at: { date, repeating, allowWhileIdle },
@@ -31,6 +86,23 @@ class Schedule {
             every: undefined
         };
     }
+    /**
+     * Creates a schedule that fires the notification whenever the current date matches
+     * every field set on the given interval.
+     *
+     * @example
+     * ```typescript
+     * import { Schedule, sendNotification } from '@tauri-apps/plugin-notification';
+     * // fires every day at 9:00
+     * const schedule = Schedule.interval({ hour: 9, minute: 0 });
+     * sendNotification({ title: 'Tauri', body: 'Good morning', schedule });
+     * ```
+     *
+     * @param interval The date fields the current date must match for the notification to fire.
+     * @param allowWhileIdle Whether the notification is allowed to fire while the device is in low-power idle (Doze) mode. Android only.
+     *
+     * @returns A schedule that can be assigned to the `schedule` option of a notification.
+     */
     static interval(interval, allowWhileIdle = false) {
         return {
             at: undefined,
@@ -38,6 +110,22 @@ class Schedule {
             every: undefined
         };
     }
+    /**
+     * Creates a schedule that repeatedly fires the notification, once every `count` interval units.
+     *
+     * @example
+     * ```typescript
+     * import { Schedule, ScheduleEvery, sendNotification } from '@tauri-apps/plugin-notification';
+     * const schedule = Schedule.every(ScheduleEvery.Hour, 2);
+     * sendNotification({ title: 'Tauri', body: 'Every two hours', schedule });
+     * ```
+     *
+     * @param kind The unit of the repeating interval.
+     * @param count How many interval units elapse between each notification.
+     * @param allowWhileIdle Whether the notification is allowed to fire while the device is in low-power idle (Doze) mode. Android only.
+     *
+     * @returns A schedule that can be assigned to the `schedule` option of a notification.
+     */
     static every(kind, count, allowWhileIdle = false) {
         return {
             at: undefined,
@@ -46,18 +134,56 @@ class Schedule {
         };
     }
 }
+/**
+ * How much the notifications of a {@link Channel} interrupt the user.
+ *
+ * It maps to the Android `NotificationManager.IMPORTANCE_*` constants and is only used on Android.
+ */
 var Importance;
 (function (Importance) {
+    /**
+     * The notifications are not shown.
+     */
     Importance[Importance["None"] = 0] = "None";
+    /**
+     * The notifications are only shown in the shade, below the fold, without a status bar icon.
+     */
     Importance[Importance["Min"] = 1] = "Min";
+    /**
+     * The notifications are shown without a sound.
+     */
     Importance[Importance["Low"] = 2] = "Low";
+    /**
+     * The notifications are shown and make a sound.
+     *
+     * This is the value used when the channel does not define an importance.
+     */
     Importance[Importance["Default"] = 3] = "Default";
+    /**
+     * The notifications are shown, make a sound and pop up as a heads-up notification.
+     */
     Importance[Importance["High"] = 4] = "High";
 })(Importance || (Importance = {}));
+/**
+ * How much of a notification is shown on the lock screen.
+ *
+ * It maps to the Android `Notification.VISIBILITY_*` constants and is only used on Android.
+ */
 var Visibility;
 (function (Visibility) {
+    /**
+     * The notification is not shown on the lock screen at all.
+     */
     Visibility[Visibility["Secret"] = -1] = "Secret";
+    /**
+     * The notification is shown on the lock screen with its sensitive content hidden.
+     *
+     * This is the value used when the channel does not define a visibility.
+     */
     Visibility[Visibility["Private"] = 0] = "Private";
+    /**
+     * The notification is shown in full on the lock screen.
+     */
     Visibility[Visibility["Public"] = 1] = "Public";
 })(Visibility || (Visibility = {}));
 /**
@@ -67,6 +193,8 @@ var Visibility;
  * import { isPermissionGranted } from '@tauri-apps/plugin-notification';
  * const permissionGranted = await isPermissionGranted();
  * ```
+ *
+ * @returns A promise resolving to whether the permission to send notifications is granted.
  *
  * @since 2.0.0
  */
@@ -111,6 +239,8 @@ async function requestPermission() {
  * }
  * ```
  *
+ * @param options The notification content, or the notification title when a string is given.
+ *
  * @since 2.0.0
  */
 function sendNotification(options) {
@@ -135,6 +265,8 @@ function sendNotification(options) {
  *   }]
  * }])
  * ```
+ *
+ * @param types The action types to register.
  *
  * @returns A promise indicating the success or failure of the operation.
  *
@@ -167,6 +299,8 @@ async function pending() {
  * import { cancel } from '@tauri-apps/plugin-notification';
  * await cancel([-34234, 23432, 4311]);
  * ```
+ *
+ * @param notifications The identifiers of the pending notifications to cancel.
  *
  * @returns A promise indicating the success or failure of the operation.
  *
@@ -212,9 +346,11 @@ async function active() {
  *
  * @example
  * ```typescript
- * import { cancel } from '@tauri-apps/plugin-notification';
- * await cancel([-34234, 23432, 4311])
+ * import { removeActive } from '@tauri-apps/plugin-notification';
+ * await removeActive([{ id: -34234 }, { id: 23432 }, { id: 4311 }])
  * ```
+ *
+ * @param notifications The active notifications to remove, identified by their id and, on Android, their optional tag.
  *
  * @returns A promise indicating the success or failure of the operation.
  *
@@ -255,6 +391,8 @@ async function removeAllActive() {
  * });
  * ```
  *
+ * @param channel The channel to create.
+ *
  * @returns A promise indicating the success or failure of the operation.
  *
  * @since 2.0.0
@@ -268,8 +406,10 @@ async function createChannel(channel) {
  * @example
  * ```typescript
  * import { removeChannel } from '@tauri-apps/plugin-notification';
- * await removeChannel();
+ * await removeChannel('new-messages');
  * ```
+ *
+ * @param id The identifier of the channel to remove.
  *
  * @returns A promise indicating the success or failure of the operation.
  *
@@ -294,9 +434,48 @@ async function removeChannel(id) {
 async function channels() {
     return await invoke('plugin:notification|listChannels');
 }
+/**
+ * Listens to notifications that are delivered while the app is running.
+ *
+ * Only emitted on mobile.
+ *
+ * @example
+ * ```typescript
+ * import { onNotificationReceived } from '@tauri-apps/plugin-notification';
+ * const unlisten = await onNotificationReceived((notification) => {
+ *   console.log(`received notification: ${notification.title}`);
+ * });
+ * ```
+ *
+ * @param cb The closure called with the notification that was delivered.
+ *
+ * @returns A promise resolving to a listener that can be used to stop listening for the event.
+ *
+ * @since 2.0.0
+ */
 async function onNotificationReceived(cb) {
     return await addPluginListener('notification', 'notification', cb);
 }
+/**
+ * Listens to the actions the user performs on a notification.
+ *
+ * Only emitted on mobile, for notifications that reference an action type
+ * registered with {@link registerActionTypes}.
+ *
+ * @example
+ * ```typescript
+ * import { onAction } from '@tauri-apps/plugin-notification';
+ * const unlisten = await onAction((notification) => {
+ *   console.log(`user acted on notification: ${notification.title}`);
+ * });
+ * ```
+ *
+ * @param cb The closure called with the notification the action was performed on.
+ *
+ * @returns A promise resolving to a listener that can be used to stop listening for the event.
+ *
+ * @since 2.0.0
+ */
 async function onAction(cb) {
     return await addPluginListener('notification', 'actionPerformed', cb);
 }
