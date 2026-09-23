@@ -434,7 +434,7 @@ async function removeChannel(id) {
  * @since 2.0.0
  */
 async function channels() {
-    return await core.invoke('plugin:notification|listChannels');
+    return await core.invoke('plugin:notification|list_channels');
 }
 /**
  * Listens to notifications that are delivered while the app is running.
