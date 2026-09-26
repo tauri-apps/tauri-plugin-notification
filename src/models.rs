@@ -4,7 +4,7 @@
 
 use std::{collections::HashMap, fmt::Display};
 
-use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as DeError};
 
 use url::Url;
 
@@ -188,11 +188,11 @@ pub enum Schedule {
 
 // custom ISO-8601 serialization that does not use 6 digits for years.
 mod iso8601 {
-    use serde::{ser::Error as _, Serialize, Serializer};
+    use serde::{Serialize, Serializer, ser::Error as _};
     use time::{
-        format_description::well_known::iso8601::{Config, EncodedConfig},
-        format_description::well_known::Iso8601,
         OffsetDateTime,
+        format_description::well_known::Iso8601,
+        format_description::well_known::iso8601::{Config, EncodedConfig},
     };
 
     const SERDE_CONFIG: EncodedConfig = Config::DEFAULT.encode();

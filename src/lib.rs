@@ -14,13 +14,13 @@
 )]
 
 use serde::Serialize;
-#[cfg(mobile)]
-use tauri::plugin::PluginHandle;
 #[cfg(desktop)]
 use tauri::AppHandle;
+#[cfg(mobile)]
+use tauri::plugin::PluginHandle;
 use tauri::{
-    plugin::{Builder, TauriPlugin},
     Manager, Runtime,
+    plugin::{Builder, TauriPlugin},
 };
 
 pub use models::*;

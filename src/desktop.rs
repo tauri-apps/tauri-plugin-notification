@@ -4,8 +4,8 @@
 
 use serde::de::DeserializeOwned;
 use tauri::{
-    plugin::{PermissionState, PluginApi},
     AppHandle, Runtime,
+    plugin::{PermissionState, PluginApi},
 };
 
 use crate::NotificationBuilder;
