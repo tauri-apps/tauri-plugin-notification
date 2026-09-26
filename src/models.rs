@@ -725,7 +725,7 @@ mod android {
     ///
     /// It maps to the `NotificationManager.IMPORTANCE_*` constants and is serialized as its
     /// integer value. Only available on Android.
-    #[derive(Debug, Clone, Copy, Serialize_repr, Deserialize_repr)]
+    #[derive(Debug, Default, Clone, Copy, Serialize_repr, Deserialize_repr)]
     #[repr(u8)]
     pub enum Importance {
         /// The notifications are not shown.
@@ -737,15 +737,10 @@ mod android {
         /// The notifications are shown and make a sound.
         ///
         /// This is the value used when the channel does not define an importance.
+        #[default]
         Default = 3,
         /// The notifications are shown, make a sound and pop up as a heads-up notification.
         High = 4,
-    }
-
-    impl Default for Importance {
-        fn default() -> Self {
-            Self::Default
-        }
     }
 
     /// How much of a notification is shown on the lock screen.
